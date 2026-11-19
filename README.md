@@ -81,7 +81,27 @@ Run the binary pointing to your configuration file:
 ./gosip-push-gateway -config config.local.toml
 ```
 
-### 4. Running as a Systemd Service
+### 3. Linphone Client Configuration
+
+To connect a mobile softphone (such as Linphone on iOS or Android) to your `gosip-push-gateway` instance so that background push notifications (`RFC 8599`) wake the device on incoming calls, configure your Linphone SIP account settings as follows:
+
+| Field | Setting Value | Description |
+| :--- | :--- | :--- |
+| **Username** | `1001` (Your SIP Extension) | FreePBX extension number |
+| **Password** | `your_extension_secret` | SIP secret / password |
+| **Domain** | `203.0.113.10` (Gateway Public IP) | IP or domain of your `gosip-push-gateway` instance |
+| **Proxy / Outbound Proxy** | `sip:203.0.113.10:5060;transport=udp` | Routes all signaling through the push proxy |
+| **Push Notifications (RFC 8599)** | **Enabled** | Allows Linphone to register APNs/FCM push tokens with the gateway |
+
+#### Linphone Settings Screenshots
+
+| Account Settings | Proxy & Transport Settings |
+| :---: | :---: |
+| ![Linphone Account Settings](docs/screenshots/linphone-account.png) *(Placeholder)* | ![Linphone Proxy Settings](docs/screenshots/linphone-proxy.png) *(Placeholder)* |
+
+*(Note: Ensure your APNs VoIP certificate / key (`.p8`) or Firebase Cloud Messaging (`credentials.json`) are correctly configured in `config.toml` on the gateway server so push notifications are successfully dispatched when `INVITE` requests arrive).*
+
+### 4. Running the Binary Directly with Configuration
 
 To run `gosip-push-gateway` automatically on system startup and manage it as a background service:
 
