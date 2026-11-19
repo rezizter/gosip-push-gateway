@@ -7,6 +7,7 @@ require (
 	cloud.google.com/go/auth/oauth2adapt v0.3.1 // indirect
 	cloud.google.com/go/compute/metadata v0.10.0 // indirect
 	firebase.google.com/go/v4 v4.23.0 // indirect
+	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/emiago/sipgo v1.7.4 // indirect
 	github.com/felixge/httpsnoop v1.1.0 // indirect

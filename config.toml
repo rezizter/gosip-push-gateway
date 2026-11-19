@@ -1,0 +1,25 @@
+[sip]
+listen_ip = "0.0.0.0"
+listen_port = 5060
+public_ip = "203.0.113.10"
+# Optional: set if proxy public IP differs from local interface IP
+# advertise_ip = "203.0.113.10"
+wake_timeout_seconds = 12
+
+[freepbx]
+ip = "10.0.0.50"
+port = 5060
+transport = "udp"
+
+[push.apns]
+enabled = true
+key_path = "/etc/push-proxy/AuthKey_XXXXXXXXXX.p8"
+key_id = "XXXXXXXXXX"
+team_id = "YYYYYYYYYY"
+voip_topic = "com.example.softphone.voip"
+# Set to false for Xcode debug builds (APNs Sandbox)
+production = true
+
+[push.fcm]
+enabled = true
+credentials_path = "/etc/push-proxy/firebase-service-account.json"
