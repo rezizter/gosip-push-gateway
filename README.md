@@ -23,6 +23,7 @@ This proxy sits between mobile clients and FreePBX:
 ├── config.toml                      # Application configuration template
 ├── freepbx-push-proxy.service       # systemd unit file
 └── /etc/default/freepbx-push-proxy  # System environment defaults
+```
 
 ### 1. Clone and Build the Binary
 
