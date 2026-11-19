@@ -168,6 +168,7 @@ An automated Ansible role is included under `ansible/roles/gosip_push_gateway` t
 | `gosip_push_gateway_apns_production` | `true` | Use APNs production gateway (false for sandbox) |
 | `gosip_push_gateway_fcm_enabled` | `false` | Enable Firebase Cloud Messaging (FCM v1) |
 | `gosip_push_gateway_fcm_credentials_path` | `/etc/gosip-push-gateway/firebase-service-account.json` | Path to FCM service account JSON file |
+An automated Ansible role (`gosip.gosip_push_gateway`) is included under `ansible/roles/gosip/gosip_push_gateway` to provision `gosip-push-gateway` across **Amazon Linux 2023**, **Rocky Linux 9**, **Ubuntu 22.04 LTS**, **Ubuntu 24.04 LTS**, and **Debian 12**.
 
 ### Example Playbook
 
@@ -177,7 +178,7 @@ Create a playbook `site.yml`:
 - hosts: sip-gateways
   become: yes
   roles:
-    - role: gosip-push-gateway/ansible/roles/gosip_push_gateway
+    - role: gosip.gosip_push_gateway
       vars:
         gosip_push_gateway_sip_public_ip: "203.0.113.10"
         gosip_push_gateway_freepbx_ip: "10.0.0.50"
@@ -200,6 +201,6 @@ Molecule application tests validate the role across all supported Linux distribu
 
 ```bash
 pip install molecule molecule-plugins[docker] docker
-cd ansible/roles/gosip_push_gateway
+cd ansible/roles/gosip/gosip_push_gateway
 molecule test
 ```
