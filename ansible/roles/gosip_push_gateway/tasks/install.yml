@@ -45,7 +45,7 @@
   block:
     - name: Download Go tarball
       get_url:
-        url: "https://golang.org/dl/go{{ gosip_push_gateway_go_version }}.linux-amd64.tar.gz"
+        url: "https://go.dev/dl/go{{ gosip_push_gateway_go_version }}.linux-amd64.tar.gz"
         dest: "/tmp/go{{ gosip_push_gateway_go_version }}.linux-amd64.tar.gz"
         mode: '0644'
 
