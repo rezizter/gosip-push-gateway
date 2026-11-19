@@ -107,3 +107,10 @@
     owner: root
     group: root
     mode: '0755'
+
+- name: Ensure correct ownership on install directory
+  file:
+    path: "{{ gosip_push_gateway_install_dir }}"
+    owner: "{{ gosip_push_gateway_user }}"
+    group: "{{ gosip_push_gateway_group }}"
+    recurse: yes
