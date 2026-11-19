@@ -25,6 +25,12 @@
     - "{{ gosip_push_gateway_conf_dir }}"
     - "{{ gosip_push_gateway_log_dir }}"
 
+- name: Update apt cache on Debian/Ubuntu
+  apt:
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+  ignore_errors: yes
+
 - name: Ensure required system packages are installed (tar, gzip, ca-certificates, rsync)
   package:
     name:
@@ -33,7 +39,6 @@
       - ca-certificates
       - rsync
     state: present
-    update_cache: yes
 
 - name: Check if Go is installed
   command: go version
