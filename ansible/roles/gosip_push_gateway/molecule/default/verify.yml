@@ -21,12 +21,17 @@
       register: conf_stat
       failed_when: not conf_stat.stat.exists
 
-    - name: Check systemd service status
-      systemd:
-        name: gosip-push-gateway
-        state: started
-        enabled: yes
-      register: service_status
+    - name: Check systemd service is active
+      command: systemctl is-active gosip-push-gateway
+      register: service_active
+      changed_when: false
+      failed_when: service_active.rc != 0
+
+    - name: Check systemd service is enabled
+      command: systemctl is-enabled gosip-push-gateway
+      register: service_enabled
+      changed_when: false
+      failed_when: service_enabled.rc != 0
 
     - name: Verify binary runs with config test / help flag
       command: /usr/local/bin/gosip-push-gateway -help
