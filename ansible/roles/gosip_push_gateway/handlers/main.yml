@@ -1,0 +1,6 @@
+---
+- name: Restart gosip-push-gateway
+  systemd:
+    name: gosip-push-gateway
+    state: restarted
+    daemon_reload: yes

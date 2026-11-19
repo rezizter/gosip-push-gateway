@@ -1,0 +1,88 @@
+---
+- name: Ensure group exists
+  group:
+    name: "{{ gosip_push_gateway_group }}"
+    state: present
+
+- name: Ensure system user exists
+  user:
+    name: "{{ gosip_push_gateway_user }}"
+    group: "{{ gosip_push_gateway_group }}"
+    system: yes
+    shell: /sbin/nologin
+    home: "{{ gosip_push_gateway_install_dir }}"
+    create_home: yes
+
+- name: Ensure required directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ gosip_push_gateway_user }}"
+    group: "{{ gosip_push_gateway_group }}"
+    mode: '0750'
+  loop:
+    - "{{ gosip_push_gateway_install_dir }}"
+    - "{{ gosip_push_gateway_conf_dir }}"
+    - "{{ gosip_push_gateway_log_dir }}"
+
+- name: Check if Go is installed
+  command: go version
+  register: go_check
+  failed_when: false
+  changed_when: false
+
+- name: Install Go if missing and required for building from source
+  block:
+    - name: Download Go tarball
+      get_url:
+        url: "https://golang.org/dl/go{{ gosip_push_gateway_go_version }}.linux-amd64.tar.gz"
+        dest: "/tmp/go{{ gosip_push_gateway_go_version }}.linux-amd64.tar.gz"
+        mode: '0644'
+
+    - name: Remove previous Go installation
+      file:
+        path: "/usr/local/go"
+        state: absent
+
+    - name: Extract Go tarball
+      unarchive:
+        src: "/tmp/go{{ gosip_push_gateway_go_version }}.linux-amd64.tar.gz"
+        dest: "/usr/local"
+        remote_src: yes
+  when: go_check.rc != 0
+
+- name: Sync source code to install directory (when running via local/molecule)
+  synchronize:
+    src: "{{ playbook_dir }}/../../"
+    dest: "{{ gosip_push_gateway_install_dir }}"
+    exclude:
+      - ".git"
+      - "ansible"
+      - "molecule"
+  when: gosip_push_gateway_install_method == "local"
+
+- name: Clone repository (when using source method without local sync)
+  git:
+    repo: "{{ gosip_push_gateway_repo_url }}"
+    dest: "{{ gosip_push_gateway_install_dir }}"
+    version: "{{ gosip_push_gateway_version }}"
+    force: yes
+  when: gosip_push_gateway_install_method == "source"
+
+- name: Build gosip-push-gateway binary
+  shell: |
+    export PATH=$PATH:/usr/local/go/bin
+    go build -o gosip-push-gateway .
+  args:
+    chdir: "{{ gosip_push_gateway_install_dir }}"
+  environment:
+    CGO_ENABLED: "0"
+
+- name: Copy binary to bin directory
+  copy:
+    src: "{{ gosip_push_gateway_install_dir }}/gosip-push-gateway"
+    dest: "{{ gosip_push_gateway_bin_dir }}/gosip-push-gateway"
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0755'

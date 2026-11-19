@@ -1,0 +1,16 @@
+[Unit]
+Description=Go SIP Push Gateway for FreePBX
+After=network.target
+
+[Service]
+Type=simple
+User={{ gosip_push_gateway_user }}
+Group={{ gosip_push_gateway_group }}
+WorkingDirectory={{ gosip_push_gateway_install_dir }}
+ExecStart={{ gosip_push_gateway_bin_dir }}/gosip-push-gateway -config {{ gosip_push_gateway_conf_dir }}/config.toml
+Restart=always
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

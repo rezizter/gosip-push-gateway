@@ -1,0 +1,9 @@
+---
+- name: Template configuration file
+  template:
+    src: config.toml.j2
+    dest: "{{ gosip_push_gateway_conf_dir }}/config.toml"
+    owner: "{{ gosip_push_gateway_user }}"
+    group: "{{ gosip_push_gateway_group }}"
+    mode: '0640'
+  notify: Restart gosip-push-gateway
