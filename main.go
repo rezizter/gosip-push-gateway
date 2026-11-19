@@ -35,13 +35,23 @@ func main() {
 
 	store := NewStore()
 
-	// Note: update NewPushGateway(cfg.Push) in push.go if you also switch push.go to take PushConfig
+	var apnsKeyPath, keyID, teamID, voipTopic, fcmCredsPath string
+	if cfg.Push.APNs.Enabled {
+		apnsKeyPath = cfg.Push.APNs.KeyPath
+		keyID = cfg.Push.APNs.KeyID
+		teamID = cfg.Push.APNs.TeamID
+		voipTopic = cfg.Push.APNs.VoIPTopic
+	}
+	if cfg.Push.FCM.Enabled {
+		fcmCredsPath = cfg.Push.FCM.CredentialsPath
+	}
+
 	pushGw, err := NewPushGateway(
-		cfg.Push.APNs.KeyPath,
-		cfg.Push.APNs.KeyID,
-		cfg.Push.APNs.TeamID,
-		cfg.Push.APNs.VoIPTopic,
-		cfg.Push.FCM.CredentialsPath,
+		apnsKeyPath,
+		keyID,
+		teamID,
+		voipTopic,
+		fcmCredsPath,
 	)
 	if err != nil {
 		slog.Error("Failed to initialize push gateway", "err", err)
