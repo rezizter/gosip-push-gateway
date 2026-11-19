@@ -74,7 +74,7 @@
 
 - name: Sync source code to install directory (when running via local/molecule)
   synchronize:
-    src: "{{ role_path }}/../../"
+    src: "{{ role_path }}/../../../"
     dest: "{{ gosip_push_gateway_install_dir }}"
     rsync_opts:
       - "--exclude=.git"
