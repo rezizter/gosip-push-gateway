@@ -51,6 +51,12 @@
         remote_src: yes
   when: go_check.rc != 0
 
+- name: Ensure rsync is installed for file synchronization
+  package:
+    name: rsync
+    state: present
+  when: gosip_push_gateway_install_method == "local"
+
 - name: Sync source code to install directory (when running via local/molecule)
   synchronize:
     src: "{{ playbook_dir }}/../../"
