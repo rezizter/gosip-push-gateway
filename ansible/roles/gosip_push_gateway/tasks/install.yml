@@ -25,6 +25,15 @@
     - "{{ gosip_push_gateway_conf_dir }}"
     - "{{ gosip_push_gateway_log_dir }}"
 
+- name: Ensure required system packages are installed (tar, gzip, ca-certificates, rsync)
+  package:
+    name:
+      - tar
+      - gzip
+      - ca-certificates
+      - rsync
+    state: present
+
 - name: Check if Go is installed
   command: go version
   register: go_check
