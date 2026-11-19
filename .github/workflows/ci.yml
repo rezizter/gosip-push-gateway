@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Molecule test
         run: |
-          cd ansible/roles/gosip/gosip_push_gateway
+          cd ansible/roles/gosip_push_gateway
           molecule test --scenario-name default
         env:
           PY_COLORS: "1"

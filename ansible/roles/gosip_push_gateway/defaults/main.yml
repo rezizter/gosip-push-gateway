@@ -1,0 +1,39 @@
+---
+# Role defaults for gosip_push_gateway
+
+gosip_push_gateway_user: "gosip"
+gosip_push_gateway_group: "gosip"
+
+gosip_push_gateway_install_dir: "/opt/gosip-push-gateway"
+gosip_push_gateway_bin_dir: "/usr/local/bin"
+gosip_push_gateway_conf_dir: "/etc/gosip-push-gateway"
+gosip_push_gateway_log_dir: "/var/log/gosip-push-gateway"
+
+# Installation method: 'source' (builds via Go) or 'local' (syncs/builds local working copy)
+gosip_push_gateway_install_method: "local"
+
+# Go version to install if building from source and go is missing
+gosip_push_gateway_go_version: "1.22.5"
+
+# SIP Configuration
+gosip_push_gateway_sip_listen_ip: "0.0.0.0"
+gosip_push_gateway_sip_listen_port: 5060
+gosip_push_gateway_sip_public_ip: "203.0.113.10"
+gosip_push_gateway_sip_advertise_ip: ""
+gosip_push_gateway_sip_wake_timeout_seconds: 12
+
+# FreePBX Configuration
+gosip_push_gateway_freepbx_ip: "10.0.0.50"
+gosip_push_gateway_freepbx_port: 5060
+gosip_push_gateway_freepbx_transport: "udp"
+
+# Push Notifications Configuration
+gosip_push_gateway_apns_enabled: false
+gosip_push_gateway_apns_key_path: "/etc/gosip-push-gateway/AuthKey.p8"
+gosip_push_gateway_apns_key_id: ""
+gosip_push_gateway_apns_team_id: ""
+gosip_push_gateway_apns_voip_topic: "com.example.softphone.voip"
+gosip_push_gateway_apns_production: true
+
+gosip_push_gateway_fcm_enabled: false
+gosip_push_gateway_fcm_credentials_path: "/etc/gosip-push-gateway/firebase-service-account.json"

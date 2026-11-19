@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  role_name: gosip_push_gateway
+  namespace: gosip
+  author: "Shaun Megaw"
+  description: "Ansible role for deploying Go SIP Push Gateway (FreePBX Push Proxy)"
+  company: "GOSIP"
+  license: "MIT"
+  min_ansible_version: "2.12"
+  platforms:
+    - name: EL
+      versions:
+        - 9
+    - name: AmazonLinux
+      versions:
+        - 2023
+    - name: Ubuntu
+      versions:
+        - jammy
+        - noble
+    - name: Debian
+      versions:
+        - bookworm
+
+dependencies: []

@@ -1,0 +1,9 @@
+---
+- name: Include OS-specific installation prep
+  include_tasks: install.yml
+
+- name: Include configuration setup
+  include_tasks: configure.yml
+
+- name: Include systemd service setup
+  include_tasks: service.yml
