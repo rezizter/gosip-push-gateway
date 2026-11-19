@@ -43,5 +43,8 @@ provisioner:
   name: ansible
   playbooks:
     converge: converge.yml
+  config_options:
+    defaults:
+      remote_user: root
 verifier:
   name: ansible
