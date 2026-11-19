@@ -33,6 +33,7 @@
       - ca-certificates
       - rsync
     state: present
+    update_cache: yes
 
 - name: Check if Go is installed
   command: go version
