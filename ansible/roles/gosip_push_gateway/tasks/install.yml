@@ -76,10 +76,10 @@
   synchronize:
     src: "{{ role_path }}/../../"
     dest: "{{ gosip_push_gateway_install_dir }}"
-    exclude:
-      - ".git"
-      - "ansible"
-      - "molecule"
+    rsync_opts:
+      - "--exclude=.git"
+      - "--exclude=ansible"
+      - "--exclude=molecule"
   when: gosip_push_gateway_install_method == "local"
 
 - name: Clone repository (when using source method without local sync)
