@@ -33,7 +33,39 @@ go mod tidy
 go build -o gosip-push-gateway .
 ```
 
-### 2. Running the Binary Directly with Configuration
+### 2. Configuration (`config.toml`)
+
+Here is the default application configuration template (`config.toml`):
+
+```toml
+[sip]
+listen_ip = "0.0.0.0"
+listen_port = 5060
+public_ip = "203.0.113.10"
+# Optional: set if proxy public IP differs from local interface IP
+# advertise_ip = "203.0.113.10"
+wake_timeout_seconds = 12
+
+[freepbx]
+ip = "10.0.0.50"
+port = 5060
+transport = "udp"
+
+[push.apns]
+enabled = true
+key_path = "/etc/push-proxy/AuthKey_XXXXXXXXXX.p8"
+key_id = "XXXXXXXXXX"
+team_id = "YYYYYYYYYY"
+voip_topic = "com.example.softphone.voip"
+# Set to false for Xcode debug builds (APNs Sandbox)
+production = true
+
+[push.fcm]
+enabled = true
+credentials_path = "/etc/push-proxy/firebase-service-account.json"
+```
+
+### 3. Running the Binary Directly with Configuration
 
 Copy and customize `config.toml`:
 
@@ -48,7 +80,7 @@ Run the binary pointing to your configuration file:
 ./gosip-push-gateway -config config.local.toml
 ```
 
-### 3. Running as a Systemd Service
+### 4. Running as a Systemd Service
 
 To run `gosip-push-gateway` automatically on system startup and manage it as a background service:
 
@@ -86,6 +118,35 @@ To run `gosip-push-gateway` automatically on system startup and manage it as a b
 ## Deployment via Ansible
 
 An automated Ansible role is included under `ansible/roles/gosip_push_gateway` to provision `gosip-push-gateway` across **Amazon Linux 2023**, **Rocky Linux 9**, **Ubuntu 22.04 LTS**, **Ubuntu 24.04 LTS**, and **Debian 12**.
+
+### Role Variables
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `gosip_push_gateway_user` | `gosip` | System user created to run the service |
+| `gosip_push_gateway_group` | `gosip` | System group for the service |
+| `gosip_push_gateway_install_dir` | `/opt/gosip-push-gateway` | Application installation directory |
+| `gosip_push_gateway_bin_dir` | `/usr/local/bin` | Directory where binary is installed |
+| `gosip_push_gateway_conf_dir` | `/etc/gosip-push-gateway` | Directory for configuration files |
+| `gosip_push_gateway_log_dir` | `/var/log/gosip-push-gateway` | Directory for logs |
+| `gosip_push_gateway_install_method` | `local` | Installation method (`local` sync or `source` clone) |
+| `gosip_push_gateway_go_version` | `1.22.5` | Go version installed if building from source |
+| `gosip_push_gateway_sip_listen_ip` | `0.0.0.0` | SIP proxy bind IP address |
+| `gosip_push_gateway_sip_listen_port` | `5060` | SIP proxy bind port |
+| `gosip_push_gateway_sip_public_ip` | `203.0.113.10` | Public IP advertised in SIP headers/Contact |
+| `gosip_push_gateway_sip_advertise_ip` | `""` | Optional explicit advertise IP override |
+| `gosip_push_gateway_sip_wake_timeout_seconds` | `12` | Seconds to hold incoming INVITE while waking device |
+| `gosip_push_gateway_freepbx_ip` | `10.0.0.50` | FreePBX / upstream SIP server IP |
+| `gosip_push_gateway_freepbx_port` | `5060` | FreePBX SIP port |
+| `gosip_push_gateway_freepbx_transport` | `udp` | Upstream SIP transport (`udp`, `tcp`) |
+| `gosip_push_gateway_apns_enabled` | `false` | Enable Apple Push Notification service (APNs VoIP) |
+| `gosip_push_gateway_apns_key_path` | `/etc/gosip-push-gateway/AuthKey.p8` | Path to APNs .p8 private key file |
+| `gosip_push_gateway_apns_key_id` | `""` | APNs Key ID |
+| `gosip_push_gateway_apns_team_id` | `""` | Apple Developer Team ID |
+| `gosip_push_gateway_apns_voip_topic` | `com.example.softphone.voip` | APNs VoIP push topic bundle ID |
+| `gosip_push_gateway_apns_production` | `true` | Use APNs production gateway (false for sandbox) |
+| `gosip_push_gateway_fcm_enabled` | `false` | Enable Firebase Cloud Messaging (FCM v1) |
+| `gosip_push_gateway_fcm_credentials_path` | `/etc/gosip-push-gateway/firebase-service-account.json` | Path to FCM service account JSON file |
 
 ### Example Playbook
 
