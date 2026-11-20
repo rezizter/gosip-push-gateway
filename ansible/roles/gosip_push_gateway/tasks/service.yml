@@ -16,9 +16,11 @@
   ignore_errors: yes
 
 - name: Fallback start if systemd daemon is not running in container
-  shell: /usr/local/bin/gosip-push-gateway -config /etc/gosip-push-gateway/config.toml > /var/log/gosip-push-gateway/gateway.log 2>&1 &
+  shell: nohup /usr/local/bin/gosip-push-gateway -config /etc/gosip-push-gateway/config.toml > /var/log/gosip-push-gateway/gateway.log 2>&1 &
   become: yes
   become_user: gosip
-  async: 10
-  poll: 0
   ignore_errors: yes
+
+- name: Pause briefly for service to bind port
+  pause:
+    seconds: 2
