@@ -4,3 +4,13 @@
   become: no
   roles:
     - role: "../../.."
+  tasks:
+    - name: Start push gateway in background for test verification
+      command: /usr/local/bin/gosip-push-gateway -config /etc/gosip-push-gateway/config.toml
+      async: 30
+      poll: 0
+      ignore_errors: yes
+
+    - name: Pause briefly for service to bind port
+      pause:
+        seconds: 2
