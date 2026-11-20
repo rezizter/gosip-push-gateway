@@ -93,7 +93,6 @@
 - name: Build gosip-push-gateway binary
   shell: |
     export PATH=$PATH:/usr/local/go/bin
-    go mod tidy
     go build -o gosip-push-gateway .
   args:
     chdir: "{{ gosip_push_gateway_install_dir }}"
