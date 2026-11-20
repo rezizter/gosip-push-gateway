@@ -97,7 +97,7 @@ To connect a mobile softphone (such as Linphone on iOS or Android) to your `gosi
 
 | Account Settings | Proxy & Transport Settings |
 | :---: | :---: |
-| ![Linphone Account Settings](docs/screenshots/linphone-account.png) *(Placeholder)* | ![Linphone Proxy Settings](docs/screenshots/linphone-proxy.png) *(Placeholder)* |
+| ![Linphone Account Settings](img/linphone_1.png) | ![Linphone Proxy Settings](img/linphone_2.png) |
 
 *(Note: Ensure your APNs VoIP certificate / key (`.p8`) or Firebase Cloud Messaging (`credentials.json`) are correctly configured in `config.toml` on the gateway server so push notifications are successfully dispatched when `INVITE` requests arrive).*
 
