@@ -39,7 +39,7 @@
       failed_when: false
 
     - name: Ensure gateway process is running for verification
-      shell: pgrep -x gosip-push-gateway || nohup /usr/local/bin/gosip-push-gateway -config /etc/gosip-push-gateway/config.toml > /var/log/gosip-push-gateway/gateway.log 2>&1 &
+      shell: "pgrep -x gosip-push-gateway || nohup /usr/local/bin/gosip-push-gateway -config /etc/gosip-push-gateway/config.toml > /var/log/gosip-push-gateway/gateway.log 2>&1 &"
       become: yes
       become_user: gosip
       changed_when: false
