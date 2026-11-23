@@ -41,7 +41,7 @@
     state: present
 
 - name: Check if Go is installed
-  command: go version
+  command: "go version"
   register: go_check
   failed_when: false
   changed_when: false

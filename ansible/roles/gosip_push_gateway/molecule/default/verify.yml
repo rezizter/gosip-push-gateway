@@ -22,19 +22,19 @@
       failed_when: not conf_stat.stat.exists
 
     - name: Check gosip-push-gateway process is running
-      command: pgrep -x gosip-push-gateway
+      command: "pgrep -x gosip-push-gateway"
       register: proc_check
       changed_when: false
       failed_when: false
 
     - name: Check systemd service unit exists and status
-      command: systemctl status gosip-push-gateway
+      command: "systemctl status gosip-push-gateway"
       register: service_status_cmd
       changed_when: false
       failed_when: false
 
     - name: Verify binary runs with config test / help flag
-      command: /usr/local/bin/gosip-push-gateway -help
+      command: "/usr/local/bin/gosip-push-gateway -help"
       register: help_run
       failed_when: false
 

@@ -9,8 +9,8 @@
   notify: Restart gosip-push-gateway
 
 - name: Reload systemd daemon
-  command: systemctl daemon-reload
+  command: "systemctl daemon-reload"
 
 - name: Ensure gosip-push-gateway is enabled and started
-  command: systemctl enable --now gosip-push-gateway
+  command: "systemctl enable --now gosip-push-gateway"
   ignore_errors: yes
