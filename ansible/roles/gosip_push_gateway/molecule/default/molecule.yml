@@ -8,7 +8,6 @@ platforms:
     image: amazonlinux:2023
     pre_build_image: true
     privileged: true
-    command: /sbin/init
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     cgroupns_mode: host
@@ -16,7 +15,6 @@ platforms:
     image: rockylinux:9
     pre_build_image: true
     privileged: true
-    command: /sbin/init
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     cgroupns_mode: host
