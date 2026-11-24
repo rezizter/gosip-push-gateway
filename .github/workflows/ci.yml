@@ -1,0 +1,151 @@
+name: Go & Ansible Molecule CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-vet:
+    name: Test & Vet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Verify formatting (gofmt)
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "The following files are not formatted with gofmt:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run unit tests with race detector
+        run: go test -v -race -coverprofile=coverage.out ./...
+
+      - name: Check code coverage summary
+        run: go tool cover -func=coverage.out
+
+  golangci-lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: latest
+
+  build:
+    name: Build Binary (${{ matrix.goos }}/${{ matrix.goarch }})
+    needs: [test-and-vet, golangci-lint]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build static binary
+        env:
+          CGO_ENABLED: "0"
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          mkdir -p dist
+          go build -trimpath -ldflags="-s -w" \
+            -o dist/gosip-push-gateway-${{ matrix.goos }}-${{ matrix.goarch }} \
+            main.go
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/gosip-push-gateway-${{ matrix.goos }}-${{ matrix.goarch }}
+
+  molecule:
+    name: Molecule (${{ matrix.distro }})
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: amazonlinux2023
+            command: /usr/sbin/init
+          - distro: rockylinux9
+            command: /usr/sbin/init
+          - distro: ubuntu2204
+            command: /lib/systemd/systemd
+          - distro: ubuntu2404
+            command: /lib/systemd/systemd
+          - distro: debian12
+            command: /lib/systemd/systemd
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download linux/amd64 binary artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: binary-linux-amd64
+          path: dist/
+
+      - name: Ensure binary is executable
+        run: chmod +x dist/gosip-push-gateway-linux-amd64
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: deploy/ansible/requirements.txt
+
+      - name: Install Ansible, Molecule, and Testinfra
+        run: |
+          pip install --upgrade pip
+          pip install ansible-core molecule "molecule-plugins[docker]" pytest-testinfra
+          ansible-galaxy collection install ansible.posix community.general
+
+      - name: Run Molecule test suite
+        working-directory: deploy/ansible/roles/github_rundeck_options
+        env:
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_DOCKER_COMMAND: ${{ matrix.command }}
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"
+        run: molecule test
