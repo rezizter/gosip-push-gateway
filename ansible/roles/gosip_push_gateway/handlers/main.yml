@@ -1,3 +1,0 @@
----
-- name: Restart gosip-push-gateway
-  command: "systemctl restart gosip-push-gateway"
