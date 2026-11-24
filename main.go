@@ -108,4 +108,6 @@ func main() {
 
 	go func() {
 		if err := srv.ListenAndServe(ctx, "udp", listenAddr); err != nil {
-			slog.Error("UDP
+			slog.Error("UDP server failed", "error", err)
+		}
+	}()
