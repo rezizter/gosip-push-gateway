@@ -23,6 +23,9 @@ jobs:
           go-version-file: go.mod
           cache: true
 
+      - name: Tidy Go modules
+        run: go mod tidy
+
       - name: Verify formatting (gofmt)
         run: |
           unformatted=$(gofmt -l .)
