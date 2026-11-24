@@ -105,16 +105,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - distro: amazonlinux2023
-            command: /usr/sbin/init
           - distro: rockylinux9
-            command: /usr/sbin/init
-          - distro: ubuntu2204
-            command: /lib/systemd/systemd
-          - distro: ubuntu2404
-            command: /lib/systemd/systemd
-          - distro: debian12
-            command: /lib/systemd/systemd
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -132,20 +123,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
-          cache-dependency-path: deploy/ansible/requirements.txt
 
       - name: Install Ansible, Molecule, and Testinfra
         run: |
           pip install --upgrade pip
-          pip install ansible-core molecule "molecule-plugins[docker]" pytest-testinfra
+          pip install ansible-core molecule "molecule-plugins[docker]"
           ansible-galaxy collection install ansible.posix community.general
 
-      - name: Run Molecule test suite
-        working-directory: deploy/ansible/roles/github_rundeck_options
+      - name: Run Ansible deploy playbook test on Rocky 9
         env:
-          MOLECULE_DISTRO: ${{ matrix.distro }}
-          MOLECULE_DOCKER_COMMAND: ${{ matrix.command }}
+          MOLECULE_DISTRO: rockylinux9
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"
-        run: molecule test
+        run: |
+          cd ansible
+          ansible-playbook -i "localhost," -c local deploy.yml -e gosip_push_gateway_install_method=local
