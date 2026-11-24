@@ -10,7 +10,6 @@ import (
 	"syscall"
 
 	"github.com/emiago/sipgo"
-	"github.com/emiago/sipgo/sip"
 )
 
 type PushSIPProxy struct {
@@ -111,3 +110,7 @@ func main() {
 			slog.Error("UDP server failed", "error", err)
 		}
 	}()
+
+	<-ctx.Done()
+	slog.Info("Shutting down push proxy gracefully...")
+}
