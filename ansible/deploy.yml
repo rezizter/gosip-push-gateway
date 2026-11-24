@@ -1,0 +1,11 @@
+---
+- name: Deploy Go SIP Push Gateway
+  hosts: push_gateways
+  become: yes
+  vars:
+    gosip_push_gateway_sip_public_ip: "203.0.113.10"
+    gosip_push_gateway_freepbx_ip: "10.0.0.50"
+    gosip_push_gateway_install_method: "local"
+
+  roles:
+    - role: roles/gosip_push_gateway
