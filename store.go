@@ -6,12 +6,12 @@ import (
 )
 
 type DeviceRegistration struct {
-	Extension   string
-	ContactURI  string // Actual mobile IP:Port
-	PNProvider  string // "apns" or "fcm"
-	PNToken     string // pn-prid
-	PNParam     string // pn-param (e.g., iOS bundle ID / VoIP topic)
-	UpdatedAt   time.Time
+	Extension  string
+	ContactURI string // Actual mobile IP:Port
+	PNProvider string // "apns" or "fcm"
+	PNToken    string // pn-prid
+	PNParam    string // pn-param (e.g., iOS bundle ID / VoIP topic)
+	UpdatedAt  time.Time
 }
 
 type Store struct {
